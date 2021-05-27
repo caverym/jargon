@@ -1,11 +1,25 @@
+/*!
+# Jargon
+
+A simple command line parser for Rust.
+
+## Why?
+
+There are many argument handlers/parsers for Rust, but they're all missing someting, or have too
+much.
+
+comparing Pico to Clap.
+
+Pico requires a lot of manual interaction with the arguments, not much abstraction. But I
+definitely recommend it as the best there currently is. Clap… Clap has an idiotic amount of
+abstraction, doing too much for its own good.
+
+My goal in creating Jargon is to take ideas from both Pico and Clap to create a more helpful and
+comprehensive argument parser.
+*/
+
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
-
-use std::io::{
-    Result,
-    Error,
-    ErrorKind,
-};
 
 /// Main Jargon struct which represents the user's program. This structure will contain the program
 /// name, author (optional), version (optional), keys (arguments to parse), and actual command line
@@ -158,14 +172,21 @@ impl Jargon {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone)]
+#[allow(missing_docs)]
 struct Keys(Vec<Key>);
 
 impl Keys {
+    #[allow(missing_docs)]
     pub fn new() -> Keys {
         Keys(Vec::new())
     }
 }
 
+/// # Key
+///
+/// A Key is any argument on the command line, starting with `--` for long, `-` for short.
+/// The key struct contains the name, short (optional), and long (optional) flag for every key.
+///
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Key {
     name: String,
@@ -174,30 +195,36 @@ pub struct Key {
 }
 
 impl Key {
+    /// Creates an instance of the `Key` struct, requires a name.
     pub fn new<T: ToString>(name: T) -> Key {
         Key {
             name: name.to_string(), short: None, long: None
         }
     }
 
+    /// Returns the name of they key.
     pub fn get_name(&self) -> String {
         self.name.to_string()
     }
 
+    /// Returns the short (`-`) flag from the key, a null character if it does not exist. FOR NOW.
     pub fn get_short(&self) -> String {
         self.short.unwrap_or('\0').to_string()
     }
 
+    /// Returns the long (`--`) flag from the key, a null character if it does not exist. FOR NOW.
     pub fn get_long(&self) -> String {
         self.long.to_owned().unwrap_or("\0".to_string()).to_string()
     }
 
+    /// Used at the creation of a key to add a short (`-`) flag to the key.
     pub fn short<T: Into<Key>>(mut self, short: T) -> Key {
         let short: Key = short.into();
         self.short = short.short;
         self
     }
 
+    /// Used at the creation of a key to add a longs (`--`) flag to the key.
     pub fn long<T: Into<Key>>(mut self, long: T) -> Key {
         let long: Key = long.into();
         self.long = long.long;
