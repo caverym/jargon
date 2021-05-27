@@ -23,6 +23,19 @@ comprehensive argument parser.
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
+use std::io::{
+    Result,
+    Error,
+    ErrorKind,
+};
+
+#[allow(missing_docs)]
+macro_rules! notfound {
+    ($e:expr) => {
+        Err(Error::new(ErrorKind::NotFound, format!("argument '{}' not found", $e)))
+    };
+}
+
 /// Main Jargon struct which represents the user's program. This structure will contain the program
 /// name, author (optional), version (optional), keys (arguments to parse), and actual command line
 /// arguments.
@@ -164,6 +177,14 @@ impl Jargon {
         }
 
         None
+    }
+
+    /// Finds and returns the String from an argument, returns Result<Error> on failure.
+    pub fn arg_str<T: ToString>(&self, key: T) -> Result<String> {
+        match self.option_arg_str(key.to_string()) {
+            Some(s) => Ok(s),
+            None => notfound!(key.to_string()),
+        }
     }
 }
 
@@ -474,5 +495,34 @@ mod tests {
         let app: crate::Jargon = crate::Jargon::new("arg_str", args).argument(add);
 
         assert_eq!(app.option_arg_str("add"), None);
+    }
+
+    #[test]
+    fn arg_str_req() {
+        let args: Vec<String> = ["arg_str_req".to_string(), "-a".to_string(), "34".to_string()].to_vec();
+
+        let app: crate::Jargon = crate::Jargon::new("arg_str_req", args)
+            .argument(
+                crate::Key::new("age")
+                    .short("-a")
+                    .long("--age")
+            );
+
+        app.arg_str("age").unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn arg_str_req_f() {
+        let args: Vec<String> = ["arg_str_req".to_string(), "-a".to_string()].to_vec();
+
+        let app: crate::Jargon = crate::Jargon::new("arg_str_req", args)
+            .argument(
+                crate::Key::new("age")
+                    .short("-a")
+                    .long("--age")
+            );
+
+        app.arg_str("age").unwrap();
     }
 }
