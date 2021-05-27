@@ -179,6 +179,7 @@ impl Jargon {
         None
     }
 
+    /// Gathers a vector until the next argument, returns `None` when there is nothing.
     pub fn option_arg_vec_str<T: ToString>(&self, key: T) -> Option<Vec<String>> {
         let key: Key = self.get_key(key)?;
 
@@ -192,7 +193,7 @@ impl Jargon {
 
         for i in 0..count {
             if (self.args[i] == short || self.args[i] == long) && i < max {
-                if self.args[i+1].starts_with("-") {
+                if self.args[i+1].starts_with('-') {
                     break;
                 }
                 let mut tmp: Vec<String> = [self.args[i+1].to_owned()].to_vec();
@@ -200,10 +201,17 @@ impl Jargon {
             }
         }
 
-        if v.len() < 1 {
+        if v.is_empty() {
             None
         } else {
             Some(v)
+        }
+    }
+
+    pub fn arg_vec_str<T: ToString>(&self, key: T) -> Result<Vec<String>> {
+        match self.option_arg_vec_str(key.to_string()) {
+            Some(v) => Ok(v),
+            None => notfound!(key.to_string())
         }
     }
 
@@ -270,7 +278,7 @@ impl Key {
         let lo = self.long.to_owned()?;
 
         match self.sub {
-            true => Some(lo.to_string()),
+            true => Some(lo),
             false => Some(format!("--{}", lo))
         }
     }
@@ -290,7 +298,7 @@ impl Key {
     }
 
     /// Used at the creation of a key to make it a sub command.
-    pub fn sub(mut self, sub: bool) -> Key {
+    pub fn subcommand(mut self, sub: bool) -> Key {
         self.sub = sub;
         self
     }
