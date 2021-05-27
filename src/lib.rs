@@ -208,6 +208,7 @@ impl Jargon {
         }
     }
 
+    /// Finds and returns the `Vec<String>` from an argument, returns `Result<Error>` on failure
     pub fn arg_vec_str<T: ToString>(&self, key: T) -> Result<Vec<String>> {
         match self.option_arg_vec_str(key.to_string()) {
             Some(v) => Ok(v),
@@ -215,7 +216,7 @@ impl Jargon {
         }
     }
 
-    /// Finds and returns the String from an argument, returns Result<Error> on failure.
+    /// Finds and returns the `String` from an argument, returns `Result<Error>` on failure.
     pub fn arg_str<T: ToString>(&self, key: T) -> Result<String> {
         match self.option_arg_str(key.to_string()) {
             Some(s) => Ok(s),
