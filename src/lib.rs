@@ -48,9 +48,8 @@ impl Jargon {
     /// use std::env::args;
     /// use jargon::Jargon;
     ///
-    /// fn main() {
-    ///     let app: Jargon = Jargon::new("basic app", args().collect());
-    /// }
+    /// let app: Jargon = Jargon::new("basic app", args().collect());
+    ///
     /// ```
     ///
     /// with author and version and keys:
@@ -58,12 +57,10 @@ impl Jargon {
     /// use jargon::Jargon;
     /// use std::env::args;
     ///
-    /// fn main() {
-    ///     let app: Jargon = Jargon::new("app_add", args().collect())
-    ///         .author("avery")
-    ///         .version("0.1.0")
-    ///         .argument(["-a", "--add"]);
-    /// }
+    /// let app: Jargon = Jargon::new("app_add", args().collect())
+    ///     .author("avery")
+    ///     .version("0.1.0")
+    ///     .argument(["-a", "--add"]);
     /// ```
     pub fn new<T: ToString>(name: T, args: Vec<String>) -> Jargon {
         Jargon {
@@ -112,14 +109,20 @@ impl Jargon {
 
     /// Checks for a passed argument
     pub fn arg_bool<T: ToString>(&self, key: T) -> bool {
-        let key: Key = if let Some(k) = self.get_key(key) {
-            k
-        } else {
-            return false;
+        let key: Key = match self.get_key(key) {
+            Some(k) => k,
+            None => return false,
         };
 
-        let long: String = format!("--{}", key.get_long());
-        let short: String = format!("-{}", key.get_short());
+        let long = match key.get_long() {
+            Some(l) => l,
+            None => return false,
+        };
+
+        let short = match key.get_short() {
+            Some(s) => s,
+            None => return false,
+        };
 
         let count: usize = self.args.len();
 
@@ -145,25 +148,18 @@ impl Jargon {
     /// Argument to get a parameter from the command line. Resturns `Option<String>` when passed by
     /// the user, `None` otherwise.
     pub fn option_arg_str<T: ToString>(&self, key: T) -> Option<String> {
-        let key: Key = if let Some(k) = self.get_key(key) {
-            k
-        } else {
-            return None;
-        };
+        let key: Key = self.get_key(key)?;
 
-        let long: String = format!("--{}", key.get_long());
-        let short: String = format!("-{}", key.get_short());
+        let long: String = key.get_long()?;
+        let short: String = key.get_short()?;
 
         let count: usize = self.args.len();
         let max: usize = count - 1;
 
         for i in 0..count {
-            if self.args[i] == short || self.args[i] == long {
-                if i + 1 <= max {
-                    if !self.args[i + 1].starts_with("-") {
-                        return Some(self.args[i + 1].to_string());
-                    }
-                }
+            if (self.args[i] == short || self.args[i] == long) && i < max && !self.args[i + 1].starts_with('-')
+            {
+                return Some(self.args[i + 1].to_string());
             }
         }
 
@@ -208,14 +204,15 @@ impl Key {
         self.name.to_string()
     }
 
-    /// Returns the short (`-`) flag from the key, a null character if it does not exist. FOR NOW.
-    pub fn get_short(&self) -> String {
-        self.short.unwrap_or('\0').to_string()
+    /// Returns the short (`-`) flag from the key, `Option<String>` if it exists, `None` if not.
+    pub fn get_short(&self) -> Option<String> {
+        let sh = self.short.to_owned()?;
+        Some(sh.to_string())
     }
 
-    /// Returns the long (`--`) flag from the key, a null character if it does not exist. FOR NOW.
-    pub fn get_long(&self) -> String {
-        self.long.to_owned().unwrap_or("\0".to_string()).to_string()
+    /// Returns the long (`--`) flag from the key, `Option<String>` if it exists, `None` if not.
+    pub fn get_long(&self) -> Option<String> {
+        self.long.to_owned()
     }
 
     /// Used at the creation of a key to add a short (`-`) flag to the key.
@@ -242,7 +239,7 @@ impl From<String> for Key {
             long = Some(pre.to_string())
         }
 
-        if let Some(pre) = s.strip_prefix("-") {
+        if let Some(pre) = s.strip_prefix('-') {
             let ch: Vec<char> = pre.chars().collect();
             if ch.len() == 1 {
                 short = Some(ch[0])
@@ -287,7 +284,7 @@ impl From<[&str; 2]> for Key {
                 long = Some(pre.to_string())
             }
 
-            if let Some(pre) = s.strip_prefix("-") {
+            if let Some(pre) = s.strip_prefix('-') {
                 let ch: Vec<char> = pre.chars().collect();
                 if ch.len() == 1 {
                     short = Some(ch[0])
