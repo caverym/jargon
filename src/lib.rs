@@ -5,7 +5,7 @@ A simple command line parser for Rust.
 
 ## Why?
 
-There are many argument handlers/parsers for Rust, but they're all missing someting, or have too
+There are many argument handlers/parsers for Rust, but they're all missing something, or have too
 much.
 
 ### Comparing Pico to Clap.
@@ -128,12 +128,12 @@ impl Jargon {
         };
 
         let long = match key.get_long() {
-            Some(l) => format!("-{}", l),
+            Some(l) => l,
             None => return false,
         };
 
         let short = match key.get_short() {
-            Some(s) => format!("-{}", s),
+            Some(s) => s,
             None => return false,
         };
 
@@ -158,13 +158,13 @@ impl Jargon {
         None
     }
 
-    /// Argument to get a parameter from the command line. Resturns `Option<String>` when passed by
+    /// Argument to get a parameter from the command line. Returns `Option<String>` when passed by
     /// the user, `None` otherwise.
     pub fn option_arg_str<T: ToString>(&self, key: T) -> Option<String> {
         let key: Key = self.get_key(key)?;
 
-        let long: String = format!("--{}", key.get_long()?);
-        let short: String = format!("-{}", key.get_short()?);
+        let long: String = key.get_long()?;
+        let short: String = key.get_short()?;
 
         let count: usize = self.args.len();
         let max: usize = count - 1;
@@ -177,6 +177,34 @@ impl Jargon {
         }
 
         None
+    }
+
+    pub fn option_arg_vec_str<T: ToString>(&self, key: T) -> Option<Vec<String>> {
+        let key: Key = self.get_key(key)?;
+
+        let long: String = key.get_long()?;
+        let short: String = key.get_short()?;
+
+        let count: usize = self.args.len();
+        let max: usize = count -1;
+
+        let mut v: Vec<String> = Vec::new();
+
+        for i in 0..count {
+            if (self.args[i] == short || self.args[i] == long) && i < max {
+                if self.args[i+1].starts_with("-") {
+                    break;
+                }
+                let mut tmp: Vec<String> = [self.args[i+1].to_owned()].to_vec();
+                v.append(&mut tmp);
+            }
+        }
+
+        if v.len() < 1 {
+            None
+        } else {
+            Some(v)
+        }
     }
 
     /// Finds and returns the String from an argument, returns Result<Error> on failure.
@@ -208,6 +236,7 @@ pub struct Key {
     name: String,
     short: Option<char>,
     long: Option<String>,
+    sub: bool,
 }
 
 impl Key {
@@ -217,6 +246,7 @@ impl Key {
             name: name.to_string(),
             short: None,
             long: None,
+            sub: false,
         }
     }
 
@@ -225,29 +255,49 @@ impl Key {
         self.name.to_string()
     }
 
-    /// Returns the short (`-`) flag from the key, `Option<String>` if it exists, `None` if not.
+    /// Returns the short flag from the key, `Option<String>` if it exists, `None` if not.
     pub fn get_short(&self) -> Option<String> {
         let sh = self.short.to_owned()?;
-        Some(sh.to_string())
+
+        match self.sub {
+            true => Some(sh.to_string()),
+            false => Some(format!("-{}", sh))
+        }
     }
 
-    /// Returns the long (`--`) flag from the key, `Option<String>` if it exists, `None` if not.
+    /// Returns the long flag from the key, `Option<String>` if it exists, `None` if not.
     pub fn get_long(&self) -> Option<String> {
-        self.long.to_owned()
+        let lo = self.long.to_owned()?;
+
+        match self.sub {
+            true => Some(lo.to_string()),
+            false => Some(format!("--{}", lo))
+        }
     }
 
-    /// Used at the creation of a key to add a short (`-`) flag to the key.
+    /// Used at the creation of a key to add a short flag to the key.
     pub fn short<T: Into<Key>>(mut self, short: T) -> Key {
         let short: Key = short.into();
         self.short = short.short;
         self
     }
 
-    /// Used at the creation of a key to add a longs (`--`) flag to the key.
+    /// Used at the creation of a key to add a longs flag to the key.
     pub fn long<T: Into<Key>>(mut self, long: T) -> Key {
         let long: Key = long.into();
         self.long = long.long;
         self
+    }
+
+    /// Used at the creation of a key to make it a sub command.
+    pub fn sub(mut self, sub: bool) -> Key {
+        self.sub = sub;
+        self
+    }
+
+    /// Checks if key is a sub command
+    pub fn is_sub(&self) -> bool {
+        self.sub
     }
 }
 
@@ -257,7 +307,7 @@ impl From<String> for Key {
         let mut long: Option<String> = None;
 
         if let Some(pre) = s.strip_prefix("--") {
-            long = Some(pre.to_string())
+            long = Some(pre.to_string());
         }
 
         if let Some(pre) = s.strip_prefix('-') {
@@ -275,7 +325,7 @@ impl From<String> for Key {
             "".to_string()
         };
 
-        Key { name, short, long }
+        Key { name, short, long, sub: false}
     }
 }
 
@@ -291,6 +341,7 @@ impl From<char> for Key {
             name: c.to_string(),
             short: Some(c),
             long: None,
+            sub: false,
         }
     }
 }
@@ -321,7 +372,7 @@ impl From<[&str; 2]> for Key {
             "".to_string()
         };
 
-        Key { name, short, long }
+        Key { name, short, long, sub: false }
     }
 }
 
@@ -334,7 +385,8 @@ mod tests {
             crate::Key {
                 name: "a".to_string(),
                 short: Some('a'),
-                long: None
+                long: None,
+                sub: false,
             },
             key
         );
@@ -347,7 +399,8 @@ mod tests {
             crate::Key {
                 name: "all".to_string(),
                 short: None,
-                long: Some("all".to_string())
+                long: Some("all".to_string()),
+                sub: false,
             },
             key
         );
@@ -360,7 +413,8 @@ mod tests {
             crate::Key {
                 name: "a".to_string(),
                 short: Some('a'),
-                long: None
+                long: None,
+                sub: false,
             },
             key
         );
@@ -373,7 +427,8 @@ mod tests {
             crate::Key {
                 name: "all".to_string(),
                 short: None,
-                long: Some("all".to_string())
+                long: Some("all".to_string()),
+                sub: false,
             },
             key
         );
@@ -386,7 +441,8 @@ mod tests {
             crate::Key {
                 name: "all".to_string(),
                 short: Some('a'),
-                long: Some("all".to_string())
+                long: Some("all".to_string()),
+                sub: false,
             },
             key
         )
@@ -399,7 +455,8 @@ mod tests {
             crate::Key {
                 name: "all".to_string(),
                 short: Some('a'),
-                long: Some("all".to_string())
+                long: Some("all".to_string()),
+                sub: false,
             },
             key
         )
@@ -439,7 +496,8 @@ mod tests {
                     [crate::Key {
                         name: "add".to_string(),
                         short: Some('a'),
-                        long: Some("add".to_string())
+                        long: Some("add".to_string()),
+                        sub: false,
                     }; 1]
                         .to_vec()
                 ),
@@ -470,6 +528,7 @@ mod tests {
                 name: "key".to_string(),
                 short: Some('k'),
                 long: Some("key".to_string()),
+                sub: false,
             },
             key
         )
