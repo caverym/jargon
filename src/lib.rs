@@ -8,10 +8,12 @@ A simple command line parser for Rust.
 There are many argument handlers/parsers for Rust, but they're all missing someting, or have too
 much.
 
-comparing Pico to Clap.
+### Comparing Pico to Clap.
 
-Pico requires a lot of manual interaction with the arguments, not much abstraction. But I
-definitely recommend it as the best there currently is. Clap… Clap has an idiotic amount of
+* Pico requires a lot of manual interaction with the arguments, not much abstraction. But I
+definitely recommend it as the best there currently is.
+
+* Clap… Clap has an idiotic amount of
 abstraction, doing too much for its own good.
 
 My goal in creating Jargon is to take ideas from both Pico and Clap to create a more helpful and
@@ -24,7 +26,6 @@ comprehensive argument parser.
 /// Main Jargon struct which represents the user's program. This structure will contain the program
 /// name, author (optional), version (optional), keys (arguments to parse), and actual command line
 /// arguments.
-///
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Jargon {
     name: String,
@@ -64,7 +65,6 @@ impl Jargon {
     ///         .argument(["-a", "--add"]);
     /// }
     /// ```
-    ///
     pub fn new<T: ToString>(name: T, args: Vec<String>) -> Jargon {
         Jargon {
             name: name.to_string(),
@@ -186,7 +186,6 @@ impl Keys {
 ///
 /// A Key is any argument on the command line, starting with `--` for long, `-` for short.
 /// The key struct contains the name, short (optional), and long (optional) flag for every key.
-///
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Key {
     name: String,
