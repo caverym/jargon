@@ -115,12 +115,12 @@ impl Jargon {
         };
 
         let long = match key.get_long() {
-            Some(l) => l,
+            Some(l) => format!("-{}", l),
             None => return false,
         };
 
         let short = match key.get_short() {
-            Some(s) => s,
+            Some(s) => format!("-{}", s),
             None => return false,
         };
 
@@ -150,8 +150,8 @@ impl Jargon {
     pub fn option_arg_str<T: ToString>(&self, key: T) -> Option<String> {
         let key: Key = self.get_key(key)?;
 
-        let long: String = key.get_long()?;
-        let short: String = key.get_short()?;
+        let long: String = format!("--{}", key.get_long()?);
+        let short: String = format!("-{}", key.get_short()?);
 
         let count: usize = self.args.len();
         let max: usize = count - 1;
