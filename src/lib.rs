@@ -30,18 +30,24 @@ impl Jargon {
     ///
     /// basics:
     /// ```
+    /// use std::env::args;
+    /// use jargon::Jargon;
+    ///
     /// fn main() {
-    ///     let app: jagon::Jargon = jargon::Jargon::new("basic app", std::env::args().into());
+    ///     let app: Jargon = Jargon::new("basic app", args().collect());
     /// }
     /// ```
     ///
     /// with author and version and keys:
     /// ```
+    /// use jargon::Jargon;
+    /// use std::env::args;
+    ///
     /// fn main() {
-    ///     let app: jargon::Jargon = jargon::Jargon::new("app_add", std::env::args().into())
+    ///     let app: Jargon = Jargon::new("app_add", args().collect())
     ///         .author("avery")
     ///         .version("0.1.0")
-    ///         .add(["-a", "--add"]);
+    ///         .argument(["-a", "--add"]);
     /// }
     /// ```
     ///
@@ -55,38 +61,64 @@ impl Jargon {
         }
     }
 
+    /// This method is used at the creation of a Jargon struct to add an app author.
     pub fn author<T: ToString>(mut self, author: T) -> Jargon {
         self.author = Some(author.to_string());
         self
     }
 
+    /// Add an author name to an already existing Jargon struct.
+    pub fn add_author<T: ToString>(&mut self, author: T) {
+        self.author = Some(author.to_string());
+    }
+
+    /// Add an app version name to an already existing Jargon struct.
+    pub fn add_version<T: ToString>(&mut self, version: T) {
+        self.version = Some(version.to_string());
+    }
+
+    /// This method is used at the creation of a Jargon struct to add an app version.
     pub fn version<T: ToString>(mut self, version: T) -> Jargon {
         self.version = Some(version.to_string());
         self
     }
 
-    pub fn add<T: Into<Key>>(mut self, arg: T) -> Jargon {
+    /// This method is used at the creation of a Jargon struct to add an app argument.
+    pub fn argument<T: Into<Key>>(mut self, arg: T) -> Jargon {
         let mut v: Vec<Key> = vec![arg.into(); 1];
         self.keys.0.append(&mut v);
         self
     }
 
-    pub fn arg_bool<T: Into<Key>>(&self, keys: T) -> bool {
-        let key: Key = keys.into();
+    /// Add an argument to an already existing argument.
+    pub fn add_argument<T: Into<Key>>(&mut self, arg: T) {
+        let mut v: Vec<Key> = vec![arg.into(); 1];
+        self.keys.0.append(&mut v);
+    }
 
-        if let Some(k) = key.short {
-            if self.args.contains(&format!("-{}", k)) {
-                return true;
-            }
-        } else if let Some(k) = key.long {
-            if self.args.contains(&format!("--{}", k)) {
+    /// Checks for a passed argument
+    pub fn arg_bool<T: ToString>(&self, key: T) -> bool {
+        let key: Key = if let Some(k) = self.get_key(key) {
+            k
+        } else {
+            return false;
+        };
+
+        let long: String = format!("--{}", key.get_long());
+        let short: String = format!("-{}", key.get_short());
+
+        let count: usize = self.args.len();
+
+        for i in 0..count {
+            if self.args[i] == short || self.args[i] == long {
                 return true;
             }
         }
         false
     }
 
-    pub fn get_key<T: ToString>(&self, key: T) -> Option<Key> {
+    /// Used internally to create a clone of a key to check the command line
+    fn get_key<T: ToString>(&self, key: T) -> Option<Key> {
         let key: String = key.to_string();
         for k in self.keys.0.iter() {
             if k.name == key {
@@ -96,6 +128,8 @@ impl Jargon {
         None
     }
 
+    /// Argument to get a parameter from the command line. Resturns `Option<String>` when passed by
+    /// the user, `None` otherwise.
     pub fn option_arg_str<T: ToString>(&self, key: T) -> Option<String> {
         let key: Key = if let Some(k) = self.get_key(key) {
             k
@@ -106,9 +140,16 @@ impl Jargon {
         let long: String = format!("--{}", key.get_long());
         let short: String = format!("-{}", key.get_short());
 
-        for i in 1..self.args.len() {
-            if self.args[i] == long || self.args[i] == short {
-                return Some(self.args[i+1].to_owned())
+        let count: usize = self.args.len();
+        let max: usize = count-1;
+
+        for i in 0..count {
+            if self.args[i] == short || self.args[i] == long {
+                if i+1 <= max {
+                    if !self.args[i+1].starts_with("-") {
+                        return Some(self.args[i + 1].to_string());
+                    }
+                }
             }
         }
 
@@ -340,7 +381,7 @@ mod tests {
     #[test]
     fn app_add() {
         let args: Vec<String> = ["app_add".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("app_add", args).add(
+        let app: crate::Jargon = crate::Jargon::new("app_add", args).argument(
             crate::Key::new("add")
                 .short("-a")
                 .long("--add")
@@ -359,35 +400,19 @@ mod tests {
     }
 
     #[test]
-    fn bool_arg_short_t() {
-        let args: Vec<String> = ["bool_arg_short".to_string(), "-a".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("bool_arg_short", args).add(["-a", "--all"]);
+    pub fn bool_arg_short_t() {
+        let args: Vec<String> = ["bool_arg_short_t".to_string(), "-a".to_string()].to_vec();
 
-        assert!(app.arg_bool("-a"));
-    }
+        let app: crate::Jargon = crate::Jargon::new("bool_arg_short_t", args)
+            .argument(
+                crate::Key::new("add")
+                    .short("-a")
+                    .long("--add")
+            );
 
-    #[test]
-    fn bool_arg_short_f() {
-        let args: Vec<String> = ["bool_arg_short".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("bool_arg_short", args).add(["-a", "--all"]);
+        let b = app.arg_bool("add");
 
-        assert!(!app.arg_bool("-a"));
-    }
-
-    #[test]
-    fn bool_arg_long_t() {
-        let args: Vec<String> = ["bool_arg_short".to_string(), "--all".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("bool_arg_short", args).add(["-a", "--all"]);
-
-        assert!(app.arg_bool("--all"));
-    }
-
-    #[test]
-    fn bool_arg_long_f() {
-        let args: Vec<String> = ["bool_arg_short".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("bool_arg_short", args).add(["-a", "--all"]);
-
-        assert!(!app.arg_bool("-a"));
+        assert!(b);
     }
 
     #[test]
@@ -416,8 +441,25 @@ mod tests {
 
         let add: crate::Key = crate::Key::new("add").short("-a").long("--add");
         let app: crate::Jargon = crate::Jargon::new("arg_str", args)
-            .add(add);
+            .argument(add);
 
         assert_eq!(app.option_arg_str("add"), Some("1".to_string()));
+    }
+
+    #[test]
+    fn arg_str_none() {
+        let args: Vec<String> = [
+            "arg_str".to_string(),
+            "--add".to_string(),
+        ].to_vec();
+
+        let add: crate::Key = crate::Key::new("add")
+            .short("-a")
+            .long("--add");
+
+        let app: crate::Jargon = crate::Jargon::new("arg_str", args)
+            .argument(add);
+
+        assert_eq!(app.option_arg_str("add"), None);
     }
 }
