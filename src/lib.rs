@@ -155,12 +155,12 @@ impl Jargon {
         let short: String = format!("-{}", key.get_short());
 
         let count: usize = self.args.len();
-        let max: usize = count-1;
+        let max: usize = count - 1;
 
         for i in 0..count {
             if self.args[i] == short || self.args[i] == long {
-                if i+1 <= max {
-                    if !self.args[i+1].starts_with("-") {
+                if i + 1 <= max {
+                    if !self.args[i + 1].starts_with("-") {
                         return Some(self.args[i + 1].to_string());
                     }
                 }
@@ -197,7 +197,9 @@ impl Key {
     /// Creates an instance of the `Key` struct, requires a name.
     pub fn new<T: ToString>(name: T) -> Key {
         Key {
-            name: name.to_string(), short: None, long: None
+            name: name.to_string(),
+            short: None,
+            long: None,
         }
     }
 
@@ -255,7 +257,7 @@ impl From<String> for Key {
             "".to_string()
         };
 
-        Key {name, short, long }
+        Key { name, short, long }
     }
 }
 
@@ -301,7 +303,7 @@ impl From<[&str; 2]> for Key {
             "".to_string()
         };
 
-        Key {name, short, long }
+        Key { name, short, long }
     }
 }
 
@@ -407,19 +409,23 @@ mod tests {
     #[test]
     fn app_add() {
         let args: Vec<String> = ["app_add".to_string()].to_vec();
-        let app: crate::Jargon = crate::Jargon::new("app_add", args).argument(
-            crate::Key::new("add")
-                .short("-a")
-                .long("--add")
-        );
+        let app: crate::Jargon = crate::Jargon::new("app_add", args)
+            .argument(crate::Key::new("add").short("-a").long("--add"));
 
         assert_eq!(
             crate::Jargon {
                 name: "app_add".to_string(),
                 author: None,
                 version: None,
-                keys: crate::Keys([crate::Key {name: "add".to_string(), short: Some('a'), long: Some("add".to_string())}; 1].to_vec()),
-                args: ["app_add".to_string();1].to_vec(),
+                keys: crate::Keys(
+                    [crate::Key {
+                        name: "add".to_string(),
+                        short: Some('a'),
+                        long: Some("add".to_string())
+                    }; 1]
+                        .to_vec()
+                ),
+                args: ["app_add".to_string(); 1].to_vec(),
             },
             app
         )
@@ -430,11 +436,7 @@ mod tests {
         let args: Vec<String> = ["bool_arg_short_t".to_string(), "-a".to_string()].to_vec();
 
         let app: crate::Jargon = crate::Jargon::new("bool_arg_short_t", args)
-            .argument(
-                crate::Key::new("add")
-                    .short("-a")
-                    .long("--add")
-            );
+            .argument(crate::Key::new("add").short("-a").long("--add"));
 
         let b = app.arg_bool("add");
 
@@ -443,9 +445,7 @@ mod tests {
 
     #[test]
     fn keys() {
-        let key: crate::Key = crate::Key::new("key")
-            .short("-k")
-            .long("--key");
+        let key: crate::Key = crate::Key::new("key").short("-k").long("--key");
 
         assert_eq!(
             crate::Key {
@@ -459,32 +459,22 @@ mod tests {
 
     #[test]
     fn arg_str() {
-        let args: Vec<String> = [
-            "arg_str".to_string(),
-            "--add".to_string(),
-            "1".to_string(),
-        ].to_vec();
+        let args: Vec<String> =
+            ["arg_str".to_string(), "--add".to_string(), "1".to_string()].to_vec();
 
         let add: crate::Key = crate::Key::new("add").short("-a").long("--add");
-        let app: crate::Jargon = crate::Jargon::new("arg_str", args)
-            .argument(add);
+        let app: crate::Jargon = crate::Jargon::new("arg_str", args).argument(add);
 
         assert_eq!(app.option_arg_str("add"), Some("1".to_string()));
     }
 
     #[test]
     fn arg_str_none() {
-        let args: Vec<String> = [
-            "arg_str".to_string(),
-            "--add".to_string(),
-        ].to_vec();
+        let args: Vec<String> = ["arg_str".to_string(), "--add".to_string()].to_vec();
 
-        let add: crate::Key = crate::Key::new("add")
-            .short("-a")
-            .long("--add");
+        let add: crate::Key = crate::Key::new("add").short("-a").long("--add");
 
-        let app: crate::Jargon = crate::Jargon::new("arg_str", args)
-            .argument(add);
+        let app: crate::Jargon = crate::Jargon::new("arg_str", args).argument(add);
 
         assert_eq!(app.option_arg_str("add"), None);
     }
