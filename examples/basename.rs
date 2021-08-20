@@ -59,5 +59,11 @@ fn print(args: &Args, name: &String) {
                 print!("{} ", name)
             }
         }
+    } else {
+        if args.zero {
+            print!("{}", name)
+        } else {
+            print!("{} ", name)
+        }
     }
 }
