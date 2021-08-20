@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af660413-6894-4e34-95ba-148a83aa12c4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/examples/subcontinued.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jargon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jargon.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/basename.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/error.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jargons.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jargons.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +35,9 @@
     <option name="directoryName" value="q2mmb32k" />
   </component>
   <component name="ProjectId" id="1wziM7cDRVS1HHXYC8FvtXB6a7O" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
