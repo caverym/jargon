@@ -779,7 +779,7 @@ fn from_env() {
 }
 
 #[test]
-fn on_sub_e() {
+fn on_sub_v_e() {
     let mut j = Jargon::from_vec(
         vec![
             "on_sub".to_string(),
@@ -800,7 +800,7 @@ fn on_sub_e() {
 }
 
 #[test]
-fn on_sub_w() {
+fn on_sub_v_w() {
     let mut j = Jargon::from_vec(
         vec![
             "on_sub".to_string(),
@@ -820,6 +820,256 @@ fn on_sub_w() {
     }
 
     j.on_subcommand("subsub", subsub);
+}
+
+#[test]
+fn on_sub_none() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    fn subsub(_: Vec<String>) {
+        panic!()
+    }
+
+    j.on_subcommand("subsub", subsub);
+}
+
+#[test]
+fn on_sub_opt_e() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "subsub".to_string(),
+        ]
+    );
+
+    fn subsub(_: Vec<String>) -> Option<u8> {
+        Some(1u8)
+    }
+
+    assert_eq!(
+        j.opt_on_subcommand("subsub", subsub),
+        Some(1u8),
+    )
+}
+
+#[test]
+fn on_sub_opt_w() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "subsub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    fn subsub(v: Vec<String>) -> Option<u8> {
+        assert_eq!(
+            v,
+            vec![
+                "subsub".to_string(),
+                "test".to_string(),
+            ]
+        );
+
+        Some(1u8)
+    }
+
+    assert_eq!(
+        j.opt_on_subcommand("subsub", subsub),
+        Some(1u8),
+    )
+}
+
+#[test]
+fn on_sub_opt_none() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    fn subsub(_: Vec<String>) -> Option<u8> {
+        panic!()
+    }
+
+    assert_eq!(
+        j.opt_on_subcommand("subsub", subsub),
+        None,
+    )
+}
+
+#[test]
+fn on_sub_res_e() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "subsub".to_string(),
+        ]
+    );
+
+    fn subsub(_: Vec<String>) -> Result<(), Error> {
+        Ok(())
+    }
+
+    assert_eq!(
+        j.res_on_subcommand("subsub", subsub),
+        Ok(())
+    )
+}
+
+#[test]
+fn on_sub_res_none() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    fn subsub(_: Vec<String>) -> Result<(), Error> {
+        panic!()
+    }
+
+    assert_eq!(
+        j.res_on_subcommand("subsub", subsub),
+        Err(Error::MissingArg("subsub".into())),
+    )
+}
+
+#[test]
+fn on_sub_res_w() {
+    let mut j = Jargon::from_vec(
+        vec![
+            "on_sub".to_string(),
+            "subsub".to_string(),
+            "test".to_string()
+        ]
+    );
+
+    fn subsub(_: Vec<String>) -> Result<(), Error> {
+        Ok(())
+    }
+
+    assert_eq!(
+        j.res_on_subcommand("subsub", subsub),
+        Ok(())
+    )
+}
+
+#[test]
+fn sub_mut_s_e() {
+    let mut j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_s".to_string(),
+            "subsub".to_string(),
+        ]
+    );
+
+    if let Some(v) = j.subcommand("subsub") {
+        assert_eq!(
+            v,
+            vec![
+                "subsub".to_string(),
+            ]
+        )
+    }
+}
+
+#[test]
+fn sub_mut_s_w() {
+    let mut j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_s".to_string(),
+            "subsub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    if let Some(v) = j.subcommand("subsub") {
+        assert_eq!(
+            v,
+            vec![
+                "subsub".to_string(),
+                "test".to_string(),
+            ]
+        )
+    }
+}
+
+#[test]
+fn sub_mut_none() {
+    let mut j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_none".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    assert_eq!(
+        j.subcommand("subsub"),
+        None,
+    )
+}
+
+#[test]
+fn sub_s_e() {
+    let j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_s".to_string(),
+            "subsub".to_string(),
+        ]
+    );
+
+    if let Some(v) = j.subcommand_nomut("subsub") {
+        assert_eq!(
+            v,
+            vec![
+                "subsub".to_string(),
+            ]
+        )
+    }
+}
+
+#[test]
+fn sub_s_w() {
+    let mut j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_s".to_string(),
+            "subsub".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    if let Some(v) = j.subcommand("subsub") {
+        assert_eq!(
+            v,
+            vec![
+                "subsub".to_string(),
+                "test".to_string(),
+            ]
+        )
+    }
+}
+
+#[test]
+fn sub_none() {
+    let mut j: Jargon = Jargon::from_vec(
+        vec![
+            "sub_mut_none".to_string(),
+            "test".to_string(),
+        ]
+    );
+
+    assert_eq!(
+        j.subcommand("subsub"),
+        None,
+    )
 }
 
 #[test]

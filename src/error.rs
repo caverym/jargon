@@ -7,6 +7,8 @@ pub enum Error {
     Other(String),
 }
 
+impl std::error::Error for Error {}
+
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f,
@@ -15,11 +17,5 @@ impl Display for Error {
             Error::MissingArg(k) => format!("Missing argument: '{}'", k),
             Error::Other(e) => e.to_string(),
         })
-    }
-}
-
-impl<E: std::error::Error + ToString> From<E> for Error {
-    fn from(e: E) -> Self {
-        Self::Other(e.to_string())
     }
 }

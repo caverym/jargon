@@ -1,5 +1,5 @@
-use super::Key;
 use super::Error;
+use super::Key;
 use std::result::Result;
 
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
@@ -57,37 +57,59 @@ impl Jargon {
         m.contains(key)
     }
 
-    pub fn on_subcommand<K: Into<Key>, F: Fn(Vec<String>)>(&mut self, key: K, f: F) {
+    pub fn on_subcommand<K: Into<Key>, F: FnMut(Vec<String>)>(&mut self, key: K, mut f: F) {
         let key: Key = key.into();
         for i in 0..self.0.len() {
             let cont: Key = self.0[i].clone().into();
             if cont.is_sub() && cont == key {
-                return f(self.clone().finish())
+                return f(self.clone().finish());
             }
         }
     }
 
-
-    pub fn opt_on_subcommand<K: Into<Key>, F: Fn(Vec<String>) -> Option<T>, T>(&mut self, key: K, f: F) -> Option<T> {
+    pub fn opt_on_subcommand<K: Into<Key>, F: FnMut(Vec<String>) -> Option<T>, T>(
+        &mut self,
+        key: K,
+        mut f: F,
+    ) -> Option<T> {
         let key: Key = key.into();
         for i in 0..self.0.len() {
             let cont: Key = self.0[i].clone().into();
             if cont.is_sub() && cont == key {
-                return f(self.clone().finish())
+                return f(self.clone().finish());
             }
         }
         None
     }
 
-    pub fn ret_on_subcommand<K: Into<Key>, F: Fn(Vec<String>) -> Result<T, Error>, T>(&mut self, key: K, f: F) -> Result<T, Error> {
+    pub fn res_on_subcommand<K: Into<Key>, F: FnMut(Vec<String>) -> Result<T, Error>, T>(
+        &mut self,
+        key: K,
+        mut f: F,
+    ) -> Result<T, Error> {
         let key: Key = key.into();
         for i in 0..self.0.len() {
             let cont: Key = self.0[i].clone().into();
             if cont.is_sub() && cont == key {
-                return f(self.clone().finish())
+                return f(self.clone().finish());
             }
         }
+
         Err(Error::MissingArg(key.into()))
+    }
+
+    pub fn subcommand<K: Into<Key>>(&mut self, key: K) -> Option<Vec<String>> {
+        let mut v: Vec<String> = Vec::new();
+        self.on_subcommand(key, |vv| v = vv);
+        if v.is_empty() {
+            None
+        } else {
+            Some(v)
+        }
+    }
+
+    pub fn subcommand_nomut<K: Into<Key>>(&self, key: K) -> Option<Vec<String>> {
+        Jargon::from_vec(self.0.clone()).subcommand(key)
     }
 
     pub fn option_arg<K: Into<Key>>(&mut self, key: K) -> Option<String> {
@@ -108,7 +130,7 @@ impl Jargon {
                 for i in 0..len {
                     let cont: Key = self.0[i].clone().into();
                     if cont == s || cont == l {
-                        if i >= self.0.len()-1 {
+                        if i >= self.0.len() - 1 {
                             return None;
                         }
                         return if !self.0[i + 1].starts_with(s.char())
@@ -126,7 +148,7 @@ impl Jargon {
                 for i in 0..len {
                     let cont: Key = self.0[i].clone().into();
                     if cont == key {
-                        if i >= self.0.len()-1 {
+                        if i >= self.0.len() - 1 {
                             return None;
                         }
                         return if !self.0[i + 1].starts_with(key.char()) {
