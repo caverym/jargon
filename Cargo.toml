@@ -1,5 +1,5 @@
 [package]
-name = "jargon"
+name = "jargon-args"
 description = "A simple but smart command line parser"
 license = "MIT"
 version = "0.1.0"
