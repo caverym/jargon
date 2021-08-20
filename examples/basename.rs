@@ -35,55 +35,32 @@ fn main() {
         return;
     }
 
-    if !args.multiple {
-        print(&args, &args.names[0])
-    } else {
-        args.names.iter().for_each(|name| print(&args, name));
+    let mut v: Vec<String> = vec![print(&args, &args.names[0])];
+
+    if args.multiple {
+        args.names.iter().skip(1).for_each(|name| v.append(&mut vec![print(&args, name)]));
     }
 
-    if !args.zero {
-        println!()
+    if args.zero {
+        v.iter().for_each(|name| print!("{}", name));
+    } else {
+        v.iter().for_each(|name| print!("{} ", name));
+        println!();
     }
 }
 
-fn print(args: &Args, name: &String) {
+fn print(args: &Args, name: &String) -> String {
     if let Some(name) = name.split('/').last() {
         if let Some(suffix) = &args.suffix {
             if name.ends_with(suffix) {
                 if let Some(n) = name.strip_suffix(suffix) {
-                    if args.zero {
-                        print!("{}", n)
-                    } else {
-                        print!("{} ", n)
-                    }
-                } else {
-                    if args.zero {
-                        print!("{}", name)
-                    } else {
-                        print!("{} ", name)
-                    }
-                }
-            } else {
-                if args.zero {
-                    print!("{}", name)
-                } else {
-                    print!("{} ", name)
+                    return n.to_string();
                 }
             }
-        } else {
-            if args.zero {
-                print!("{}", name)
-            } else {
-                print!("{} ", name)
-            }
         }
-    } else {
-        if args.zero {
-            print!("{}", name)
-        } else {
-            print!("{} ", name)
-        }
+        return name.to_string();
     }
+    name.to_string()
 }
 
 const HELP: &str = "Usage: basename NAME [SUFFIX]
