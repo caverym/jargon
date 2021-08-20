@@ -27,6 +27,11 @@ fn main() {
         names: j.finish(),
     };
 
+    if args.names.is_empty() {
+        println!("Missing NAMES");
+        return;
+    }
+
     if !args.multiple {
         print(&args, &args.names[0])
     } else {
