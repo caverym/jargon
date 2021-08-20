@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af660413-6894-4e34-95ba-148a83aa12c4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/basename.rs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/basename.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/name.rs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/name.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/subcommand.rs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/subcommand.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/subcontinued.rs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/subcontinued.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/error.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jargons.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jargons.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +111,7 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/jargon$Test.info" NAME="Test Coverage Results" MODIFIED="1629483029428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="RsCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" CONTEXT_FILE_PATH="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/jargon$Test.info" NAME="Test Coverage Results" MODIFIED="1629485154882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="RsCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" CONTEXT_FILE_PATH="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/jargon$test.info" NAME="test Coverage Results" MODIFIED="1622132463119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="RsCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" CONTEXT_FILE_PATH="$PROJECT_DIR$" />
   </component>
 </project>
