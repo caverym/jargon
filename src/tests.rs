@@ -142,7 +142,7 @@ fn jargon_contains_short_t() {
         "beans".to_string(),
     ]);
 
-    assert!(j.contains_unmut("-a"));
+    assert!(j.contains_nomut("-a"));
 
     assert_eq!(
         j,
@@ -163,7 +163,7 @@ fn jargon_contains_short_f() {
         "beans".to_string(),
     ]);
 
-    assert!(!j.contains_unmut("-a"));
+    assert!(!j.contains_nomut("-a"));
 
     assert_eq!(
         j,
@@ -225,7 +225,7 @@ fn jargon_contains_long_t() {
         "beans".to_string(),
     ]);
 
-    assert!(j.contains_unmut("--all"));
+    assert!(j.contains_nomut("--all"));
 
     assert_eq!(
         j,
@@ -246,7 +246,7 @@ fn jargon_contains_long_f() {
         "beans".to_string(),
     ]);
 
-    assert!(!j.contains_unmut("--all"));
+    assert!(!j.contains_nomut("--all"));
 
     assert_eq!(
         j,
@@ -308,7 +308,7 @@ fn jargon_contains_dual_s_t() {
         "beans".to_string(),
     ]);
 
-    assert!(j.contains_unmut(["-a", "--all"]));
+    assert!(j.contains_nomut(["-a", "--all"]));
 
     assert_eq!(
         j,
@@ -329,7 +329,7 @@ fn jargon_contains_dual_s_f() {
         "beans".to_string(),
     ]);
 
-    assert!(!j.contains_unmut(["-a", "--all"]));
+    assert!(!j.contains_nomut(["-a", "--all"]));
 
     assert_eq!(
         j,
@@ -391,7 +391,7 @@ fn jargon_contains_dual_l_t() {
         "beans".to_string(),
     ]);
 
-    assert!(j.contains_unmut(["-a", "--all"]));
+    assert!(j.contains_nomut(["-a", "--all"]));
 
     assert_eq!(
         j,
@@ -412,7 +412,7 @@ fn jargon_contains_dual_l_f() {
         "beans".to_string(),
     ]);
 
-    assert!(!j.contains_unmut(["-a", "--all"]));
+    assert!(!j.contains_nomut(["-a", "--all"]));
 
     assert_eq!(
         j,

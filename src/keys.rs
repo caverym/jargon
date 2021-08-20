@@ -1,29 +1,109 @@
 use std::fmt::Formatter;
 
+/// # Key
+///
+/// This is the Key enum that represents processable arguments. This has four variants.
+///
+/// ## Dual
+///
+/// Key::Dual represents ONLY Key::Long and Key::Short in one, they both must start with the same character.
+///
+/// ```
+/// let key: jargon_args::Key = ["-a", "--all"].into();
+/// assert!(key.is_dual())
+/// ```
+///
+/// ## Long
+///
+/// Key::Long represents a full name argument like `--all`.
+///
+/// ```
+/// let key: jargon_args::Key = "--all".into();
+/// assert!(key.is_long())
+/// ```
+///
+/// ## Short
+///
+/// Key::Short represents a single letter argument like `-a`.
+///
+/// ```
+/// let key: jargon_args::Key = "-a".into();
+/// assert!(key.is_short())
+/// ```
+///
+/// ## sub
+///
+/// Key::Sub represents a subcommand argument, anything not converted into any other time becomes Key::Sub.
+///
+/// ```
+/// let key: jargon_args::Key = "list".into();
+/// assert!(key.is_sub())
+/// ```
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq, Clone)]
 pub enum Key {
+    /// # Dual
+    ///
+    /// Key::Dual represents ONLY Key::Long and Key::Short in one, they both must start with the same character.
+    ///
+    /// ```
+    /// let key: jargon_args::Key = ["-a", "--all"].into();
+    /// assert!(key.is_dual())
+    /// ```
     Dual {
+        /// The character at the beginning of each argument.
         char: char,
+        /// The single character for the short argument.
         s_txt: char,
+        /// The word for the long argument.
         l_txt: String,
     },
 
+    /// # Long
+    ///
+    /// Key::Long represents a full name argument like `--all`.
+    ///
+    /// ```
+    /// let key: jargon_args::Key = "--all".into();
+    /// assert!(key.is_long())
+    /// ```
     Long {
+        /// The character at the beginning of the argument.
         char: char,
+        /// The word for the argument.
         txt: String,
     },
 
+    /// # Short
+    ///
+    /// Key::Short represents a single letter argument like `-a`.
+    ///
+    /// ```
+    /// let key: jargon_args::Key = "-a".into();
+    /// assert!(key.is_short())
+    /// ```
     Short {
+        /// The character at the beginning of the argument.
         char: char,
+        /// The character for the argument.
         txt: char,
     },
 
+    /// # sub
+    ///
+    /// Key::Sub represents a subcommand argument, anything not converted into any other time becomes Key::Sub.
+    ///
+    /// ```
+    /// let key: jargon_args::Key = "list".into();
+    /// assert!(key.is_sub())
+    /// ```
     Sub {
+        /// The word for the subcommand.
         txt: String,
     },
 }
 
 impl Key {
+    /// Return the char at the beginning of each argument, Key::sub returns `\0`.
     pub fn char(&self) -> char {
         match self {
             Key::Dual { char: c, .. } => *c,
@@ -33,6 +113,7 @@ impl Key {
         }
     }
 
+    /// Returns only the text of each argument as String. `--all` is `all`.
     pub fn text(&self) -> String {
         match self {
             Key::Dual { l_txt: txt, .. } => txt.clone(),
@@ -42,6 +123,7 @@ impl Key {
         }
     }
 
+    /// Returns true if Key is Key::Dual.
     pub fn is_dual(&self) -> bool {
         match self {
             Key::Dual { .. } => true,
@@ -51,6 +133,7 @@ impl Key {
         }
     }
 
+    /// Returns true if Key is Key::Long.
     pub fn is_long(&self) -> bool {
         match self {
             Key::Dual { .. } => false,
@@ -60,6 +143,7 @@ impl Key {
         }
     }
 
+    /// Returns true if Key is Key::Short.
     pub fn is_short(&self) -> bool {
         match self {
             Key::Dual { .. } => false,
@@ -69,6 +153,7 @@ impl Key {
         }
     }
 
+    /// Returns true if Key is Key::Sub.
     pub fn is_sub(&self) -> bool {
         match self {
             Key::Dual { .. } => false,
