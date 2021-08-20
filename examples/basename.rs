@@ -10,6 +10,28 @@ struct Args {
 fn main() {
     let mut j: Jargon = Jargon::from_env();
 
+    if j.contains(["-h", "--help"]) {
+        print!(
+            "Usage: basename NAME [SUFFIX]
+  or:  basename OPTION... NAME...
+Print NAME with any leading directory components removed.
+If specified, also remove a trailing SUFFIX.
+
+  -a, --multiple       support multiple arguments and treat each as a NAME
+  -s, --suffix SUFFIX  remove a trailing SUFFIX; implies -a
+  -z, --zero           end each output line with NUL, not newline
+      --help     display this help and exit
+      --version  output version information and exit
+"
+        );
+        return;
+    }
+
+    if j.contains(["-v", "--version"]) {
+        println!("basename example for Jargon crate {}", env!("CARGO_PKG_VERSION"));
+        return;
+    }
+
     let args = Args {
         multiple: j.contains(["-a", "--multiple"]),
         suffix: j.option_arg(["-s", "--suffix"]),
