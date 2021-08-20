@@ -2,8 +2,11 @@
 name = "jargon-args"
 description = "A simple but smart command line parser"
 readme = "README.md"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Avery Murray <caverym@disroot.org>"]
 edition = "2018"
 license = "MIT"
 repository = "https://github.com/caverym/jargon"
+
+[features]
+no_mut = []

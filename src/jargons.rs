@@ -69,6 +69,7 @@ impl Jargon {
         false
     }
 
+    #[cfg(feature = "no_mut")]
     /// Checks if provided key is given in arguments. Dose not remove it.
     pub fn contains_nomut<K: Into<Key>>(&self, key: K) -> bool {
         let m = self.0.clone();
@@ -135,6 +136,7 @@ impl Jargon {
         }
     }
 
+    #[cfg(feature = "no_mut")]
     /// Checks if key exists, removes it without modifying your Jargon variable,
     /// and returns it and all remaining arguments in
     /// Some(Vec<String>). None if key isn't in arguments.

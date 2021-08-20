@@ -134,6 +134,7 @@ fn jargon_finish() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_short_t() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -156,6 +157,7 @@ fn jargon_contains_short_t() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_short_f() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -217,6 +219,7 @@ fn jargon_contains_short_f_rmv() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_long_t() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -239,6 +242,7 @@ fn jargon_contains_long_t() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_long_f() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -300,6 +304,7 @@ fn jargon_contains_long_f_rmv() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_dual_s_t() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -322,6 +327,7 @@ fn jargon_contains_dual_s_t() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_dual_s_f() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -383,6 +389,7 @@ fn jargon_contains_dual_l_f_rmv() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_dual_l_t() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -405,6 +412,7 @@ fn jargon_contains_dual_l_t() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn jargon_contains_dual_l_f() {
     let j = Jargon::from_vec(vec![
         "jargon".to_string(),
@@ -921,6 +929,7 @@ fn sub_mut_none() {
 }
 
 #[test]
+#[cfg(feature = "no_mut")]
 fn sub_s_e() {
     let j: Jargon = Jargon::from_vec(vec!["sub_mut_s".to_string(), "subsub".to_string()]);
 
