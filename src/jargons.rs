@@ -25,7 +25,7 @@ impl Jargon {
                 l_txt: l,
             } => {
                 let s: Key = Key::Short {
-                    char: c.clone(),
+                    char: c,
                     txt: s,
                 };
                 let l: Key = Key::Long { char: c, txt: l };
@@ -95,7 +95,7 @@ impl Jargon {
             }
         }
 
-        Err(Error::MissingArg(key.into()))
+        Err(Error::MissingArg(key))
     }
 
     pub fn subcommand<K: Into<Key>>(&mut self, key: K) -> Option<Vec<String>> {
@@ -123,7 +123,7 @@ impl Jargon {
                 l_txt: l,
             } => {
                 let s: Key = Key::Short {
-                    char: c.clone(),
+                    char: c,
                     txt: s,
                 };
                 let l: Key = Key::Long { char: c, txt: l };

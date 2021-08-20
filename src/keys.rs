@@ -26,9 +26,9 @@ pub enum Key {
 impl Key {
     pub fn char(&self) -> char {
         match self {
-            Key::Dual { char: c, .. } => c.clone(),
-            Key::Long { char: c, .. } => c.clone(),
-            Key::Short { char: c, .. } => c.clone(),
+            Key::Dual { char: c, .. } => *c,
+            Key::Long { char: c, .. } => *c,
+            Key::Short { char: c, .. } => *c,
             Key::Sub { .. } => '\0',
         }
     }
@@ -81,17 +81,15 @@ impl Key {
 
 impl From<String> for Key {
     fn from(s: String) -> Self {
-        let s: String = s.to_string();
         let chars: Vec<char> = s.chars().collect();
 
         if !chars[0].is_alphabetic() {
+            let char: char = chars[0];
             if s.len() == 2 {
-                let char: char = chars[0].clone();
-                let txt: char = chars[1].clone();
+                let txt: char = chars[1];
 
                 Self::Short { char, txt }
             } else {
-                let char: char = chars[0].clone();
                 let mut txt: String = String::new();
 
                 chars
@@ -151,7 +149,7 @@ impl std::fmt::Display for Key {
                 } => format!("{}{}, {}{}{}", c, s, c, c, l),
                 Key::Long { char: c, txt: t } => format!("{}{}{}", c, c, t),
                 Key::Short { char: c, txt: t } => format!("{}{}", c, t),
-                Key::Sub { txt: t } => format!("{}", t),
+                Key::Sub { txt: t } => t.to_string(),
             }
         )
     }

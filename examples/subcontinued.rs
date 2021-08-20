@@ -1,4 +1,4 @@
-use jargon::*;
+use jargon_args::Jargon;
 
 fn main() {
     let mut j: Jargon = Jargon::from_env();

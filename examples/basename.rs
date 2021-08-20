@@ -1,4 +1,4 @@
-use jargon::Jargon;
+use jargon_args::Jargon;
 
 struct Args {
     multiple: bool,
@@ -16,7 +16,10 @@ fn main() {
     }
 
     if j.contains(["-v", "--version"]) {
-        println!("basename example for Jargon crate {}", env!("CARGO_PKG_VERSION"));
+        println!(
+            "basename example for Jargon crate {}",
+            env!("CARGO_PKG_VERSION")
+        );
         return;
     }
 
