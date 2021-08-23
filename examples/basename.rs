@@ -1,5 +1,6 @@
 use jargon_args::Jargon;
 
+// Not required, but a helper struct to contain arguments and their data.
 struct Args {
     multiple: bool,
     suffix: Option<String>,
@@ -8,14 +9,14 @@ struct Args {
 }
 
 fn main() {
-    let mut j: Jargon = Jargon::from_env();
+    let mut j: Jargon = Jargon::from_env(); // Get an instance of Jargon using `std::env::args()`
 
-    if j.contains(["-h", "--help"]) {
+    if j.contains(["-h", "--help"]) { // check for help argument
         print!("{}", HELP);
         return;
     }
 
-    if j.contains(["-v", "--version"]) {
+    if j.contains(["-v", "--version"]) { // check for version argument
         println!(
             "basename example for Jargon crate {}",
             env!("CARGO_PKG_VERSION")
@@ -23,32 +24,33 @@ fn main() {
         return;
     }
 
-    let args = Args {
-        multiple: j.contains(["-a", "--multiple"]),
-        suffix: j.option_arg(["-s", "--suffix"]),
-        zero: j.contains(["-z", "--zero"]),
-        names: j.finish(),
+    let args = Args { // fill helper struct
+        multiple: j.contains(["-a", "--multiple"]), // multiple
+        suffix: j.option_arg(["-s", "--suffix"]), // suffix to remove
+        zero: j.contains(["-z", "--zero"]), // terminate lines with null
+        names: j.finish(), // get names
     };
 
-    if args.names.is_empty() {
+    if args.names.is_empty() { // check if there are names
         println!("Missing NAMES");
         return;
     }
 
-    let mut v: Vec<String> = vec![print(&args, &args.names[0])];
+    let mut v: Vec<String> = vec![print(&args, &args.names[0])]; // initiate vector of names
 
-    if args.multiple {
+    if args.multiple { // fill the rest if `-a` or `--multiple` was passed
         args.names.iter().skip(1).for_each(|name| v.append(&mut vec![print(&args, name)]));
     }
 
-    if args.zero {
+    if args.zero { // terminate with null if `-z` or `--zero` was passed
         v.iter().for_each(|name| print!("{}", name));
-    } else {
+    } else { // terminate each name with space or new line
         v.iter().for_each(|name| print!("{} ", name));
         println!();
     }
 }
 
+// extract basename and remove suffix
 fn print(args: &Args, name: &String) -> String {
     if let Some(name) = name.split('/').last() {
         if let Some(suffix) = &args.suffix {
