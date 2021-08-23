@@ -45,8 +45,7 @@ fn main() {
     if args.zero { // terminate with null if `-z` or `--zero` was passed
         v.iter().for_each(|name| print!("{}", name));
     } else { // terminate each name with space or new line
-        v.iter().for_each(|name| print!("{} ", name));
-        println!();
+        v.iter().for_each(|name| println!("{} ", name));
     }
 }
 
