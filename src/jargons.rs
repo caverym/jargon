@@ -1,6 +1,7 @@
 use super::Error;
 use super::Key;
 use std::result::Result;
+use std::str::FromStr;
 
 /// # Jargon
 ///
@@ -146,7 +147,7 @@ impl Jargon {
 
     /// Checks for provided key in arguments, removes it, returns Some(String) with the value after it if there is one.
     /// None is there is no value.
-    pub fn option_arg<K: Into<Key>>(&mut self, key: K) -> Option<String> {
+    pub fn option_arg<T: FromStr, K: Into<Key>>(&mut self, key: K) -> Option<T> {
         let key: Key = key.into();
         let len: usize = self.0.len();
 
@@ -168,7 +169,7 @@ impl Jargon {
                             || !self.0[i + 1].starts_with(l.char())
                         {
                             self.0.remove(i);
-                            Some(self.0.remove(i))
+                            self.0.remove(i).parse().ok()
                         } else {
                             None
                         };
@@ -184,7 +185,7 @@ impl Jargon {
                         }
                         return if !self.0[i + 1].starts_with(key.char()) {
                             self.0.remove(i);
-                            Some(self.0.remove(i))
+                            self.0.remove(i).parse().ok()
                         } else {
                             None
                         };
@@ -198,7 +199,7 @@ impl Jargon {
 
     /// Checks for provided key in arguments, removes it, returns Ok(String) with the value after it if there is one.
     /// Err(jargon_args::Error) is there is no value.
-    pub fn result_arg<K: Into<Key>>(&mut self, key: K) -> Result<String, Error> {
+    pub fn result_arg<T: FromStr, K: Into<Key>>(&mut self, key: K) -> Result<T, Error> {
         let key: Key = key.into();
         self.option_arg(key.clone()).ok_or(Error::MissingArg(key))
     }
