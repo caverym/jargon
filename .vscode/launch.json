@@ -1,0 +1,175 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'jargon-args'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "jargon-args",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'basename'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=basename",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "basename",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'basename'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=basename",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "basename",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'name'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=name",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "name",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'name'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=name",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "name",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'subcommand'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=subcommand",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "subcommand",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'subcommand'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=subcommand",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "subcommand",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'subcontinued'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=subcontinued",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "subcontinued",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'subcontinued'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=subcontinued",
+                    "--package=jargon-args"
+                ],
+                "filter": {
+                    "name": "subcontinued",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
