@@ -1,5 +1,6 @@
 use super::Error;
 use super::Key;
+use std::ops::Deref;
 use std::result::Result;
 use std::str::FromStr;
 
@@ -206,8 +207,6 @@ impl Jargon {
 
     /// Drops your jargon instance and returns all remaining arguments.
     pub fn finish(self) -> Vec<String> {
-        let mut v: Vec<String> = self.0;
-        v.remove(0);
-        v
+        self.0.iter().skip(1).map(|s| s.to_string()).collect()
     }
 }

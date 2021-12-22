@@ -474,7 +474,7 @@ fn jargon_arg_option_short_fa() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("-a"), None,)
+    assert_eq!(j.option_arg::<String, &str>("-a"), None,)
 }
 
 #[test]
@@ -484,7 +484,7 @@ fn jargon_arg_option_short_fm() {
         "-a".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("-a"), None,)
+    assert_eq!(j.option_arg::<String, &str>("-a"), None,)
 }
 
 #[test]
@@ -495,7 +495,7 @@ fn jargon_arg_option_short_f() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("-a"), None,)
+    assert_eq!(j.option_arg::<String, &str>("-a"), None,)
 }
 
 #[test]
@@ -519,7 +519,7 @@ fn jargon_arg_option_long_fa() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("--all"), None,)
+    assert_eq!(j.option_arg::<String, &str>("--all"), None,)
 }
 
 #[test]
@@ -529,7 +529,7 @@ fn jargon_arg_option_long_fm() {
         "--all".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("--all"), None,)
+    assert_eq!(j.option_arg::<String, &str>("--all"), None,)
 }
 
 #[test]
@@ -540,7 +540,7 @@ fn jargon_arg_option_long_f() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg("--all"), None,)
+    assert_eq!(j.option_arg::<String, &str>("--all"), None,)
 }
 
 #[test]
@@ -564,7 +564,7 @@ fn jargon_arg_option_dual_s_fa() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
@@ -574,7 +574,7 @@ fn jargon_arg_option_dual_s_fm() {
         "-a".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
@@ -585,7 +585,7 @@ fn jargon_arg_option_dual_s_f() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
@@ -597,7 +597,7 @@ fn jargon_arg_option_dual_l_t() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), Some("hello".to_string()),)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), Some("hello".to_string()),)
 }
 
 #[test]
@@ -609,7 +609,7 @@ fn jargon_arg_option_dual_l_fa() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
@@ -619,7 +619,7 @@ fn jargon_arg_option_dual_l_fm() {
         "--all".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
@@ -630,7 +630,7 @@ fn jargon_arg_option_dual_l_f() {
         "world".to_string(),
     ]);
 
-    assert_eq!(j.option_arg(["-a", "--all"]), None,)
+    assert_eq!(j.option_arg::<String, [&str; 2]>(["-a", "--all"]), None,)
 }
 
 #[test]
