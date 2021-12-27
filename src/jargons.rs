@@ -1,6 +1,5 @@
 use super::Error;
 use super::Key;
-use std::ops::Deref;
 use std::result::Result;
 use std::str::FromStr;
 
